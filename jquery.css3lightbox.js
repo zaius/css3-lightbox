@@ -7,8 +7,8 @@
 (function ($) {
   var default_options = {
     type: 'text',
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 300,
     spinner: {
       speed: 100,
       segments: 8
