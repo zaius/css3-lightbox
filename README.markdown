@@ -18,8 +18,8 @@ jQuery 1.4+ - I'm using the new jquery object creation syntax, so you have to
 upgrade from 1.3
 
 ## Demo
-For usage examples, check out a demo page here:
-http://zaius.github.com/css3-lightbox
+For usage examples, 
+[check out a demo page here](http://zaius.github.com/css3-lightbox)
 
 ## Fallback
 The lightbox uses css 3 declarations for the rounded corners and box shadows. 
