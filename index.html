@@ -2,16 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>css3 lightbox</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
     <script src="prettify.js" type="text/javascript"></script>
     <script src="http://github.com/zaius/css3-lightbox/raw/master/jquery.css3lightbox.min.js" type="text/javascript"></script>
-    <link href="prettify.css" media="screen" rel="stylesheet" type="text/css" /> 
+    <link href="prettify.css" media="screen" rel="stylesheet" type="text/css" />
+
 
     <script>
       $(function() {
         prettyPrint();
-
-        // Wow.. an actual use case for eval.
         $('.prettyprint').each(function() {
           eval($(this).text());
         });
@@ -54,6 +53,7 @@
         border-top-right-radius: 10px;  -moz-border-radius-topright: 10px;  -webkit-border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;  -moz-border-radius-bottomright: 10px;  -webkit-border-bottom-right-radius: 10px;
       }
+
     </style>
   </head>
   <body>
@@ -71,7 +71,17 @@
           <a href="javascript:;" id="text_lightbox">text lightbox</a>
           <pre class="prettyprint" id="one">
 $('#text_lightbox').click(function() {
-  $.lightbox({type: 'text', text: 'Hey there! This is a lightbox'});
+  $.lightbox.new();
+  $.lightbox.set_content('Hey there! This is a lightbox');
+});</pre>
+        </div>
+
+        <div class="example">
+          <a href="javascript:;" id="div_lightbox">content from a hidden div</a>
+          <pre class="prettyprint">
+$('#div_lightbox').click(function() {
+  $.lightbox.new();
+  $.lightbox.set_content($('#lightbox_content').html());
 });</pre>
         </div>
 
@@ -79,15 +89,34 @@ $('#text_lightbox').click(function() {
           <a href="javascript:;" id="ajax_lightbox">ajax lightbox</a>
           <pre class="prettyprint">
 $('#ajax_lightbox').click(function() {
-  $.lightbox({ type: 'ajax', url: 'ajax.html' });
+  $.lightbox.new();
+  $.get('ajax.html', $.lightbox.set_content);
 });</pre>
         </div>
 
         <div class="example">
-          <a href="javascript:;" id="div_lightbox">div lightbox</a>
+          <a href="javascript:;" id="iframe_lightbox">iframe lightbox</a>
           <pre class="prettyprint">
-$('#div_lightbox').click(function() {
-  $.lightbox({ type: 'div', element: $('#lightbox_content')});
+$('#iframe_lightbox').click(function() {
+  $.lightbox.new({width: 393, height: 439});
+  var iframe = $('<' + 'iframe' + '/>', {
+    src: 'http://inception.davepedu.com/noflash.php',
+  });
+
+  $.lightbox.set_content(iframe);
+});</pre>
+        </div>
+
+        <div class="example">
+          <a href="javascript:;" id="image_lightbox">image lightbox</a>
+          <pre class="prettyprint">
+$('#image_lightbox').click(function() {
+  $.lightbox.new({width: 597, height: 427});
+  var img = $('<' + 'img' + '/>', {
+    src: 'http://i.imgur.com/l13b6.jpg',
+  });
+
+  $.lightbox.set_content(img);
 });</pre>
         </div>
 
@@ -95,9 +124,7 @@ $('#div_lightbox').click(function() {
           <a href="javascript:;" id="options_lightbox">custom lightbox</a>
           <pre class="prettyprint">
 $('#options_lightbox').click(function() {
-  $.lightbox({
-    type: 'div', 
-    element: $('#lightbox_content'),
+  $.lightbox.new({
     css: {
       shadow: {
         'background-color': 'white',
@@ -110,25 +137,26 @@ $('#options_lightbox').click(function() {
       }
     }
   });
+  $.lightbox.set_content('This is a custom lightbox');
 });</pre>
         </div>
       </div>
     </div>
 
     <p id="lightbox_content">
-      Praesent non turpis nunc, viverra molestie leo. Aenean sed tortor mi, ac 
-      tincidunt lorem. Praesent aliquam sagittis nisl. Ut quis urna et nisl 
-      aliquet imperdiet vel nec tortor. Etiam lobortis metus nec orci euismod 
-      ut dignissim velit feugiat. Mauris eget nisi sit amet sapien interdum 
-      fringilla. Donec urna purus, vulputate et iaculis id, vehicula nec velit. 
-      Duis mattis tellus ut lorem viverra a dignissim orci consectetur. 
-      Maecenas ut odio dignissim lectus rhoncus dapibus. Cras et metus sem. 
-      Mauris viverra, sem at lobortis rutrum, nunc nibh pretium est, sed 
-      gravida tellus purus at ante. Suspendisse non lacus augue. Nam ornare 
-      nisi at mauris volutpat porta. Vestibulum ante ipsum primis in faucibus 
-      orci luctus et ultrices posuere cubilia Curae; Pellentesque adipiscing 
-      rutrum est sit amet scelerisque. Ut tempor sollicitudin nibh, sit amet 
-      ullamcorper enim molestie at. Nulla facilisi. Ut sed vestibulum enim. 
+      Praesent non turpis nunc, viverra molestie leo. Aenean sed tortor mi, ac
+      tincidunt lorem. Praesent aliquam sagittis nisl. Ut quis urna et nisl
+      aliquet imperdiet vel nec tortor. Etiam lobortis metus nec orci euismod
+      ut dignissim velit feugiat. Mauris eget nisi sit amet sapien interdum
+      fringilla. Donec urna purus, vulputate et iaculis id, vehicula nec velit.
+      Duis mattis tellus ut lorem viverra a dignissim orci consectetur.
+      Maecenas ut odio dignissim lectus rhoncus dapibus. Cras et metus sem.
+      Mauris viverra, sem at lobortis rutrum, nunc nibh pretium est, sed
+      gravida tellus purus at ante. Suspendisse non lacus augue. Nam ornare
+      nisi at mauris volutpat porta. Vestibulum ante ipsum primis in faucibus
+      orci luctus et ultrices posuere cubilia Curae; Pellentesque adipiscing
+      rutrum est sit amet scelerisque. Ut tempor sollicitudin nibh, sit amet
+      ullamcorper enim molestie at. Nulla facilisi. Ut sed vestibulum enim.
       Vivamus non tellus erat.
     </p>
   </body>
