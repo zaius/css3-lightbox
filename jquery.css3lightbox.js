@@ -6,17 +6,13 @@
 
 (function ($) {
   var default_options = {
-    type: 'text',
     width: 400,
     height: 300,
-    spinner: {
-      speed: 100,
-      segments: 8
-    },
-    css: { 
+    css: {
       shadow: {
-        'background-color': 'black',
-        'opacity': 0.8,
+        'background-color': '#777',
+        'opacity': 0.7,
+        'cursor': 'pointer',
         'position': 'fixed',
         'left': 0, 'top': 0, 'bottom': 0, 'right': 0,
         'z-index': 1000
@@ -24,20 +20,22 @@
       modal: {
         'background-color': 'black',
         'color': 'white',
-        'padding': 10,
         'position': 'fixed',
         'z-index': 1001,
-        'border': '5px solid white',
-        'border-radius': 10, '-moz-border-radius': 10, '-webkit-border-radius': 10,
-        'box-shadow': '0 0 10px #fff', '-moz-box-shadow': '0 0 10px #fff', '-webkit-box-shadow': '0 0 10px #fff'
+        'border': '10px solid white',
+        'box-shadow': '0 0 15px #444', '-moz-box-shadow': '0 0 15px #444', '-webkit-box-shadow': '0 0 15px #444'
+      },
+      content: {
+        'overflow-y': 'auto',
+        'padding': 10,
       },
       close_button: {
         'cursor': 'pointer',
         'position': 'absolute',
-        'top': -10, 'right': -10,
+        'top': -20, 'right': -20,
         'width': 20, 'height': 18,
         'border-radius': 20, '-moz-border-radius': 20, '-webkit-border-radius': 20,
-        'box-shadow': '5px 5px 5px #000', '-moz-box-shadow': '5px 5px 5px #000', '-webkit-box-shadow': '5px 5px 5px #000',
+        'box-shadow': '5px 5px 5px #444', '-moz-box-shadow': '5px 5px 5px #444', '-webkit-box-shadow': '5px 5px 5px #444',
         'border': '2px solid white',
         'background': 'black',
         'color': 'white',
@@ -48,7 +46,7 @@
         'margin': 0,
         'text-align': 'center'
       },
-      spinner: { 
+      spinner: {
         'width': 200, 'height': 200,
         'position': 'absolute'
       },
@@ -63,10 +61,12 @@
     }
   };
 
+  var shadow, modal, content, spinner, close;
+
   var set_dynamic_css = function(options) {
     var dynamic_css = {
       modal: {
-        'width': options.width, 
+        'width': options.width,
         'height': options.height,
         'left': ($(window).width() - options.width) / 2,
         'top': ($(window).height() - options.height) / 2
@@ -74,92 +74,100 @@
       spinner: {
         'left': (options.width - options.css.spinner.width) / 2,
         'top': (options.height - options.css.spinner.height) / 2
+      },
+      content: {
+        'height': options.height - options.css.content.padding * 2,
+        'width': options.width - options.css.content.padding * 2
       }
     };
 
     $.extend(true, options.css, dynamic_css);
   };
 
-
-  var show = function(options) {
-    options = $.extend(true, {}, default_options, options);
-    set_dynamic_css(options);
-
-    var shadow = $('<div />', { css: options.css.shadow});
-    var modal = $('<div />', { css: options.css.modal});
-    var spinner = $('<div />', { css: options.css.spinner});
-    var close = $('<div />', { text: 'X', css: options.css.close_button});
-
+  var spinning = true;
+  var start_spinner = function(options) {
     // Spinner setup
     var spinner_balls = [];
     var size = Math.min(options.css.spinner.width, options.css.spinner.height);
-    for (var i = 0; i < options.spinner.segments; i++) {
-      options.css.spinner_ball.top = size / 2 + 25 * Math.sin(Math.PI * 2 * i / options.spinner.segments);
-      options.css.spinner_ball.left = size / 2 + 25 * Math.cos(Math.PI * 2 * i / options.spinner.segments);
-      spinner_balls.push($('<div />', { css: options.css.spinner_ball}));
+    var segments = 8;
+    var speed = 100;
+    for (var i = 0; i < segments; i++) {
+      options.css.spinner_ball.top = size / 2 + 25 * Math.sin(Math.PI * 2 * i / segments);
+      options.css.spinner_ball.left = size / 2 + 25 * Math.cos(Math.PI * 2 * i / segments);
+      options.css.opacity = (7 - i) / segments;
+      spinner_balls.push($('<div />', { css: options.css.spinner_ball }));
     }
-    $.each(spinner_balls, function() { spinner.append(this); });
+    $.each(spinner_balls, function() {
+      spinner.append(this);
+      // spinner.fadeTo(();
+    });
 
-    var spinning = true;
     var fade = function(i) {
       if (!spinning) return;
       spinner_balls[i].stop(true, true).fadeTo(0, 1).
-        fadeOut(options.spinner.segments * options.spinner.speed);
+        fadeOut(segments * speed * 2);
 
       setTimeout(function() {
-        fade((i + 1) % options.spinner.segments)
-      }, options.spinner.speed);
+        fade((i + 1) % segments)
+      }, speed);
     };
-    
-    var start_spinner = function() { modal.append(spinner); fade(0); }
-    var stop_spinner = function() { spinner.remove(); spinning = false; }
+
+    modal.append(spinner);
+    fade(0);
+  }
+
+  var stop_spinner = function() {
+    spinner.remove();
+    spinning = false;
+  }
+
+  var lightbox = {
+    new: function(options) {
+      options = $.extend(true, {}, default_options, options);
+      set_dynamic_css(options);
+
+      shadow = $('<div />', { css: options.css.shadow });
+      modal = $('<div />', { css: options.css.modal });
+      content = $('<div />', { css: options.css.content });
+      spinner = $('<div />', { css: options.css.spinner });
+      close = $('<div />', { css: options.css.close_button, text: 'x' });
 
 
-    // Would probably be nice to do some fading here. Couldn't be bothered.
-    var packup = function() { 
-      modal.remove();
-      shadow.remove();
-    }
 
-    shadow.click(packup);
-    close.click(packup);
+      // Would probably be nice to do some fading here. Couldn't be bothered.
+      var packup = function() {
+        modal.remove();
+        shadow.remove();
+      }
 
-    modal.append(close);
-    $('body').append(shadow).append(modal);
+      shadow.click(packup);
+      close.click(packup);
 
-    if (options.type == 'text') {
-      modal.append($('<div />', { text: options.text }));
-    }
-    else if (options.type == 'div') {
-      var el = options.element.clone();
-      modal.append(el);
-      el.show();
-    }
-    else if (options.type == 'iframe') {
-      start_spinner();
-      var iframe = $('<iframe />', {
-        src: options.url,
-        css: {'width': 0, 'height': 0, 'border': 'none'},
-        load: function() { 
-          stop_spinner();
-          iframe.width('100%').height('100%');
-        }
-      });
-      modal.append(iframe);
-    } else if (options.type == 'ajax') {
-      start_spinner();
-      $.get(options.url, function(data) {
+      modal.append(close);
+      $('body').append(shadow).append(modal);
+
+      start_spinner(options);
+    },
+
+    set_content: function(data) {
+      if (typeof(data) == 'string') {
         stop_spinner();
-        var content = $('<div />', {
-          html: data,
-          css: { 'overflow-y': 'scroll', 'height': options.height}
-        });
+
+        content.html(data);
         modal.append(content);
-      });
-    } else {
-      throw('unsupported lightbox type');
+      } else {
+        // Data is a html element, e.g. iframe, img. Don't need to wrap it
+        data.width('100%');
+        data.height('100%');
+        modal.append(data);
+        data.hide();
+
+        data.load(function() {
+          stop_spinner();
+          data.show();
+        });
+      }
     }
   };
-
-  $.extend({ lightbox: show });
+  $.extend({ lightbox: lightbox });
 })(jQuery);
