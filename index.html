@@ -71,7 +71,7 @@
           <a href="javascript:;" id="text_lightbox">text lightbox</a>
           <pre class="prettyprint" id="one">
 $('#text_lightbox').click(function() {
-  $.lightbox.new();
+  $.lightbox.create();
   $.lightbox.set_content('Hey there! This is a lightbox');
 });</pre>
         </div>
@@ -80,7 +80,7 @@ $('#text_lightbox').click(function() {
           <a href="javascript:;" id="div_lightbox">content from a hidden div</a>
           <pre class="prettyprint">
 $('#div_lightbox').click(function() {
-  $.lightbox.new();
+  $.lightbox.create();
   $.lightbox.set_content($('#lightbox_content').html());
 });</pre>
         </div>
@@ -89,7 +89,7 @@ $('#div_lightbox').click(function() {
           <a href="javascript:;" id="ajax_lightbox">ajax lightbox</a>
           <pre class="prettyprint">
 $('#ajax_lightbox').click(function() {
-  $.lightbox.new();
+  $.lightbox.create();
   $.get('ajax.html', $.lightbox.set_content);
 });</pre>
         </div>
@@ -98,7 +98,7 @@ $('#ajax_lightbox').click(function() {
           <a href="javascript:;" id="iframe_lightbox">iframe lightbox</a>
           <pre class="prettyprint">
 $('#iframe_lightbox').click(function() {
-  $.lightbox.new({width: 393, height: 439});
+  $.lightbox.create({width: 393, height: 439});
   var iframe = $('<' + 'iframe' + '/>', {
     src: 'http://inception.davepedu.com/noflash.php',
   });
@@ -111,7 +111,7 @@ $('#iframe_lightbox').click(function() {
           <a href="javascript:;" id="image_lightbox">image lightbox</a>
           <pre class="prettyprint">
 $('#image_lightbox').click(function() {
-  $.lightbox.new({width: 597, height: 427});
+  $.lightbox.create({width: 597, height: 427});
   var img = $('<' + 'img' + '/>', {
     src: 'http://i.imgur.com/l13b6.jpg',
   });
@@ -124,7 +124,7 @@ $('#image_lightbox').click(function() {
           <a href="javascript:;" id="options_lightbox">custom lightbox</a>
           <pre class="prettyprint">
 $('#options_lightbox').click(function() {
-  $.lightbox.new({
+  $.lightbox.create({
     css: {
       shadow: {
         'background-color': 'white',
