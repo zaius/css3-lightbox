@@ -50,4 +50,4 @@ Even better, patch the code and send me a pull request!
 This code is licensed under the ISC license which lets you do pretty much
 whatever you want with it. Please see LICENSE for the full text.
 
-Copyright (c) 2010 David Kelso - david at kelso dot id dot au
+Copyright (c) 2012 David Kelso - david at kelso dot id dot au

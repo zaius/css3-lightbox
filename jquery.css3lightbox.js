@@ -1,7 +1,7 @@
 /*
  * jQuery css3 lightbox
  * http://github.com/zaius/css3-lightbox
- * David Kelso 2010, david at kelso dot id dot au
+ * David Kelso 2012, david at kelso dot id dot au
  */
 
 (function ($) {
@@ -122,7 +122,7 @@
   }
 
   var lightbox = {
-    new: function(options) {
+    create: function(options) {
       options = $.extend(true, {}, default_options, options);
       set_dynamic_css(options);
 
